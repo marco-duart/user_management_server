@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import typeOrmConfigAsync from './database.config';
+import { typeOrmConfigAsync } from './database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
