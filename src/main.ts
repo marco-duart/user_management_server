@@ -16,10 +16,10 @@ async function bootstrap() {
     .addServer('/v1')
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('v1/docs', app, document);
+  SwaggerModule.setup('api/v1/docs', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix('v1');
+  app.setGlobalPrefix('api/v1');
   app.enableCors({
     origin: '*',
   });
