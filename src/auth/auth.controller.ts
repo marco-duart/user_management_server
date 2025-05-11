@@ -1,10 +1,19 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { ApiTags, ApiBody, ApiResponse, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBody,
+  ApiResponse,
+  ApiOperation,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { UserDocs } from '../database/docs/user.docs';
 import { LoginDocs, LoginResponseDocs, RegisterDocs } from './docs';
+import { AuthGuard } from './guards/auth.guard';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { CurrentUserDto } from 'src/decorators/dto/current-user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -33,5 +42,18 @@ export class AuthController {
   })
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('me')
+  @ApiOperation({ summary: 'Get logged user info' })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: 'Successful to get logged user info.',
+    type: UserDocs,
+  })
+  me(@CurrentUser() user: CurrentUserDto) {
+    return this.authService.me(user.user);
   }
 }
