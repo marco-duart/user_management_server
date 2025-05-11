@@ -70,7 +70,10 @@ export class AuthService {
     try {
       const user = await this.getUserByEmail(loginDto.email);
       if (!user) {
-        throw new HttpException(EXCEPTION_MESSAGE.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          EXCEPTION_MESSAGE.USER_NOT_FOUND,
+          HttpStatus.NOT_FOUND,
+        );
       }
 
       const compare = await bcrypt.compare(loginDto.password, user.password);
@@ -98,4 +101,15 @@ export class AuthService {
     }
   }
 
+  async me(id: number) {
+    try {
+      const user = await this.userRepository.findOneOrFail({ where: { id } });
+      return user;
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }
