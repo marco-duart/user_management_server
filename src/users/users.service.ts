@@ -1,4 +1,4 @@
-import { FindManyOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import {
   ForbiddenException,
   HttpException,
@@ -6,8 +6,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
 import { User } from '../database/entities/user.entity';
-import { UpdateUserDto } from './dto/update.user.dto';
+import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRoleEnum } from '../enums/user-role.enum';
 import { EXCEPTION_MESSAGE } from '../enums/exception-message.enum';
 import { SUCCESSFUL_MESSAGE } from '../enums/successful-message.enum';
@@ -19,25 +25,49 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async getAll(filters?: {
-    role?: UserRoleEnum;
-    sortBy?: 'name' | 'createdAt';
-    order?: 'asc' | 'desc';
-  }) {
+  async getUsersWithLastLoginOver30Days(
+    options?: IPaginationOptions,
+  ): Promise<Pagination<User>> {
     try {
-      const queryOptions: FindManyOptions<User> = {};
+      const queryBuilder = this.usersRepository.createQueryBuilder('user');
+
+      const dateThreshold = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+
+      queryBuilder.where(
+        '(user.lastLoginAt < :dateThreshold OR ' +
+          '(user.lastLoginAt IS NULL AND user.createdAt < :dateThreshold))',
+        { dateThreshold },
+      );
+
+      queryBuilder.orderBy('user.lastLoginAt', 'DESC');
+
+      return paginate<User>(queryBuilder, options);
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async getAll(
+    filters?: {
+      role?: UserRoleEnum;
+      sortBy?: 'name' | 'createdAt';
+      order?: 'ASC' | 'DESC';
+    },
+    options?: IPaginationOptions,
+  ): Promise<Pagination<User>> {
+    try {
+      const queryBuilder = this.usersRepository.createQueryBuilder('user');
 
       if (filters?.role) {
-        queryOptions.where = { role: filters.role };
+        queryBuilder.where('user.role = :role', { role: filters.role });
       }
 
       if (filters?.sortBy) {
-        queryOptions.order = {
-          [filters.sortBy]: filters.order?.toUpperCase() || 'ASC',
-        };
+        queryBuilder.orderBy(`user.${filters.sortBy}`, filters.order || 'ASC');
       }
 
-      return await this.usersRepository.find(queryOptions);
+      return paginate<User>(queryBuilder, options);
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
@@ -70,6 +100,10 @@ export class UsersService {
 
       if (userId !== user.id && userRole !== UserRoleEnum.ADMIN) {
         throw new ForbiddenException(EXCEPTION_MESSAGE.FORBIDDEN);
+      }
+
+      if (data.password) {
+        data.password = await bcrypt.hash(data.password, 10);
       }
 
       await this.usersRepository.update(id, data);

@@ -14,7 +14,6 @@ import {
   ApiOperation,
   ApiResponse,
   ApiParam,
-  ApiBody,
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -24,9 +23,10 @@ import { CurrentUserDto } from '../decorators/dto/current-user.dto';
 import { Roles } from '../decorators/roles.decorator';
 import { UserRoleEnum } from '../enums/user-role.enum';
 import { RoleGuard } from '../auth/guards/role.guard';
-import { UpdateUserDto } from './dto/update.user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDocs } from '../database/docs/user.docs';
-
+import { Pagination, IPaginationOptions } from 'nestjs-typeorm-paginate';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -35,17 +35,41 @@ export class UsersController {
 
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRoleEnum.ADMIN)
+  @Get('inactive')
+  @ApiOperation({
+    summary: 'Admin gets users with last login over 30 days ago',
+  })
+  @ApiBearerAuth()
+  async getInactiveUsers(
+    @Query() paginationOptions?: IPaginationOptions,
+  ): Promise<Pagination<UserResponseDto>> {
+    return await this.usersService.getUsersWithLastLoginOver30Days({
+      page: paginationOptions?.page || 1,
+      limit: paginationOptions?.limit || 10,
+    });
+  }
+
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(UserRoleEnum.ADMIN)
   @Get()
   @ApiOperation({
-    summary: 'Admin gets all users with optional filters and sorting',
+    summary:
+      'Admin gets all users with optional filters, sorting and pagination',
   })
   @ApiBearerAuth()
   async getAll(
     @Query('role') role?: UserRoleEnum,
     @Query('sortBy') sortBy?: 'name' | 'createdAt',
-    @Query('order') order?: 'asc' | 'desc',
-  ) {
-    return await this.usersService.getAll({ role, sortBy, order });
+    @Query('order') order?: 'ASC' | 'DESC',
+    @Query() paginationOptions?: IPaginationOptions,
+  ): Promise<Pagination<UserResponseDto>> {
+    return await this.usersService.getAll(
+      { role, sortBy, order },
+      {
+        page: paginationOptions?.page || 1,
+        limit: paginationOptions?.limit || 10,
+      },
+    );
   }
 
   @UseGuards(AuthGuard, RoleGuard)
