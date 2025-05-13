@@ -82,6 +82,9 @@ export class AuthService {
         throw new UnauthorizedException(EXCEPTION_MESSAGE.WRONG_CREDENTIALS);
       }
 
+      user.lastLoginAt = new Date();
+      await this.userRepository.save(user);
+
       const payload = {
         email: user.email,
         user: user.id,
