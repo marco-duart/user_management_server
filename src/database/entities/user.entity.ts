@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserRoleEnum } from '../../enums/user-role.enum';
+import { UserStatusEnum } from 'src/enums/user-status.enum';
 
 @Entity('user')
 export class User {
@@ -27,11 +28,22 @@ export class User {
 
   @Column({
     type: 'enum',
+    enum: UserStatusEnum,
+    nullable: false,
+    default: UserStatusEnum.ACTIVE,
+  })
+  status: UserStatusEnum;
+
+  @Column({
+    type: 'enum',
     enum: UserRoleEnum,
     nullable: false,
     default: UserRoleEnum.USER,
   })
   role: UserRoleEnum;
+
+  @Column({ type: 'timestamp', nullable: true })
+  lastLoginAt: Date | null;
 
   @CreateDateColumn()
   createdAt: Date;
