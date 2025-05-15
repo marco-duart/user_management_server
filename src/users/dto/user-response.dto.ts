@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRoleEnum } from 'src/enums/user-role.enum';
-import { UserStatusEnum } from 'src/enums/user-status.enum';
+import { UserRoleEnum } from '../../enums/user-role.enum';
+import { UserStatusEnum } from '../../enums/user-status.enum';
 
 export class UserResponseDto {
   @ApiProperty({ example: 1 })

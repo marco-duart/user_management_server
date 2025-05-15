@@ -12,8 +12,8 @@ import {
 import { UserDocs } from '../database/docs/user.docs';
 import { LoginDocs, LoginResponseDocs, RegisterDocs } from './docs';
 import { AuthGuard } from './guards/auth.guard';
-import { CurrentUser } from 'src/decorators/current-user.decorator';
-import { CurrentUserDto } from 'src/decorators/dto/current-user.dto';
+import { CurrentUser } from '../decorators/current-user.decorator';
+import { CurrentUserDto } from '../decorators/dto/current-user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
