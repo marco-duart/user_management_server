@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRoleEnum } from '../../enums/user-role.enum';
+import { UserStatusEnum } from '../../enums/user-status.enum';
 
 export class UserDocs {
   @ApiProperty({ example: 1, description: 'The id of the user.' })
@@ -22,10 +23,22 @@ export class UserDocs {
   password: string;
 
   @ApiProperty({
+    example: UserStatusEnum.ACTIVE,
+    description: 'The status of the user.',
+  })
+  status: UserStatusEnum;
+
+  @ApiProperty({
     example: UserRoleEnum.USER,
     description: 'The role of the user.',
   })
   role: UserRoleEnum;
+
+  @ApiProperty({
+    example: '2024-01-01T00:00:00.000Z',
+    description: 'The last login date.',
+  })
+  lastLoginAt: Date;
 
   @ApiProperty({
     example: '2024-01-01T00:00:00.000Z',
