@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserRoleEnum } from '../../enums/user-role.enum';
-import { UserStatusEnum } from 'src/enums/user-status.enum';
+import { UserStatusEnum } from '../../enums/user-status.enum';
 
 @Entity('user')
 export class User {
