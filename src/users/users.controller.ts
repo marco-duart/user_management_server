@@ -15,6 +15,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiBearerAuth,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthGuard } from '../auth/guards/auth.guard';
@@ -56,6 +57,11 @@ export class UsersController {
     summary:
       'Admin gets all users with optional filters, sorting and pagination',
   })
+  @ApiQuery({ name: 'role', required: false, type: String, description: 'Filter by role' })
+  @ApiQuery({ name: 'sortBy', required: false, type: Number, description: 'Sort by name or createdAt' })
+  @ApiQuery({ name: 'order', required: false, type: Number, description: 'ASC or DESC order sorted users' })
+  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number', example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page', example: 10 })
   @ApiBearerAuth()
   async getAll(
     @Query('role') role?: UserRoleEnum,
