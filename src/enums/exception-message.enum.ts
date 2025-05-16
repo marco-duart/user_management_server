@@ -1,7 +1,7 @@
 export enum EXCEPTION_MESSAGE {
-  EMAIL_EXISTS = 'Email already registered.',
-  USER_NOT_FOUND = 'User not found.',
-  WRONG_CREDENTIALS = 'Email or password wrong.',
-  FORBIDDEN = 'Forbidden resource',
-  INCORRECT_ARGUMENTS = 'Incorrect arguments or params.',
+  EMAIL_EXISTS = 'E-mail já cadastrado.',
+  USER_NOT_FOUND = 'Usuário não encontrado.',
+  WRONG_CREDENTIALS = 'E-mail ou senha incorretos.',
+  FORBIDDEN = 'Acesso negado a este recurso',
+  INCORRECT_ARGUMENTS = 'Argumentos ou parâmetros incorretos.',
 }
