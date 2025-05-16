@@ -35,6 +35,7 @@ export class AuthService {
 
       return createUser;
     } catch (error) {
+      console.log(error);
       throw new HttpException(
         error.message,
         error?.status || HttpStatus.BAD_REQUEST,
@@ -46,6 +47,7 @@ export class AuthService {
     try {
       return await this.userRepository.exists({ where: { email } });
     } catch (error) {
+      console.log(error);
       throw new HttpException(error.message, error.status);
     }
   }
@@ -62,6 +64,7 @@ export class AuthService {
         },
       });
     } catch (error) {
+      console.log(error);
       throw new HttpException(error.message, error.status);
     }
   }
@@ -91,6 +94,7 @@ export class AuthService {
         token,
       };
     } catch (error) {
+      console.log(error);
       throw new HttpException(
         error.message,
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -103,6 +107,7 @@ export class AuthService {
       const user = await this.userRepository.findOneOrFail({ where: { id } });
       return user;
     } catch (error) {
+      console.log(error);
       throw new HttpException(
         error.message,
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -115,28 +120,44 @@ export class AuthService {
     firstName: string;
     lastName: string;
   }) {
-    let user = await this.userRepository.findOne({
-      where: { email: googleUser.email },
-    });
-
-    if (!user) {
-      user = this.userRepository.create({
-        email: googleUser.email,
-        name: `${googleUser.firstName} ${googleUser.lastName}`,
-        password: await bcrypt.hash(Math.random().toString(36), 16),
+    try {
+      let user = await this.userRepository.findOne({
+        where: { email: googleUser.email },
       });
-      await this.userRepository.save(user);
-    }
 
-    return user;
+      if (!user) {
+        user = this.userRepository.create({
+          email: googleUser.email,
+          name: `${googleUser.firstName} ${googleUser.lastName}`,
+          password: await Math.random().toString(36),
+        });
+        await this.userRepository.save(user);
+      }
+
+      return user;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async generateJwt(user: User) {
-    const payload = {
-      email: user.email,
-      user: user.id,
-      role: user.role,
-    };
-    return this.jwtService.signAsync(payload);
+    try {
+      const payload = {
+        email: user.email,
+        user: user.id,
+        role: user.role,
+      };
+      return this.jwtService.signAsync(payload);
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
