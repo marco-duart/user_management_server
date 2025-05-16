@@ -85,13 +85,7 @@ export class AuthService {
       user.lastLoginAt = new Date();
       await this.userRepository.save(user);
 
-      const payload = {
-        email: user.email,
-        user: user.id,
-        role: user.role,
-      };
-
-      const token = await this.jwtService.signAsync(payload);
+      const token = await this.generateJwt(user);
 
       return {
         token,
@@ -114,5 +108,35 @@ export class AuthService {
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async findOrCreateUser(googleUser: {
+    email: string;
+    firstName: string;
+    lastName: string;
+  }) {
+    let user = await this.userRepository.findOne({
+      where: { email: googleUser.email },
+    });
+
+    if (!user) {
+      user = this.userRepository.create({
+        email: googleUser.email,
+        name: `${googleUser.firstName} ${googleUser.lastName}`,
+        password: await bcrypt.hash(Math.random().toString(36), 16),
+      });
+      await this.userRepository.save(user);
+    }
+
+    return user;
+  }
+
+  async generateJwt(user: User) {
+    const payload = {
+      email: user.email,
+      user: user.id,
+      role: user.role,
+    };
+    return this.jwtService.signAsync(payload);
   }
 }
