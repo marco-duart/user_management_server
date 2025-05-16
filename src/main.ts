@@ -11,7 +11,7 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('User Management Server')
-    .setDescription('This is an API')
+    .setDescription('Api desenvolvida para gerenciar usuários')
     .setVersion('1.0')
     .addServer('/v1')
     .build();

@@ -38,7 +38,7 @@ export class UsersController {
   @Roles(UserRoleEnum.ADMIN)
   @Get('inactive')
   @ApiOperation({
-    summary: 'Admin gets users with last login over 30 days ago',
+    summary: 'Admin obtém usuários com último login há mais de 30 dias',
   })
   @ApiBearerAuth()
   async getInactiveUsers(
@@ -55,13 +55,13 @@ export class UsersController {
   @Get()
   @ApiOperation({
     summary:
-      'Admin gets all users with optional filters, sorting and pagination',
+      'Admin obtém todos os usuários com filtros opcionais, ordenação e paginação',
   })
-  @ApiQuery({ name: 'role', required: false, type: String, description: 'Filter by role' })
-  @ApiQuery({ name: 'sortBy', required: false, type: Number, description: 'Sort by name or createdAt' })
-  @ApiQuery({ name: 'order', required: false, type: Number, description: 'ASC or DESC order sorted users' })
-  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number', example: 1 })
-  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Items per page', example: 10 })
+  @ApiQuery({ name: 'role', required: false, type: String, description: 'Filtrar por perfil (role' })
+  @ApiQuery({ name: 'sortBy', required: false, type: Number, description: 'Ordenar por nome ou data de criação' })
+  @ApiQuery({ name: 'order', required: false, type: Number, description: 'Ordenação ASC ou DESC' })
+  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Número da página', example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Itens por página', example: 10 })
   @ApiBearerAuth()
   async getAll(
     @Query('role') role?: UserRoleEnum,
@@ -80,12 +80,12 @@ export class UsersController {
 
   @UseGuards(AuthGuard, RoleGuard)
   @Patch(':id')
-  @ApiOperation({ summary: 'Self or admin update a user by ID' })
-  @ApiParam({ name: 'id', type: 'integer', description: 'ID of the user' })
+  @ApiOperation({ summary: 'Usuário atualiza a si próprio ou admin atualiza um usuário pelo ID' })
+  @ApiParam({ name: 'id', type: 'integer', description: 'ID do usuário' })
   @ApiBearerAuth()
   @ApiResponse({
     status: 200,
-    description: 'Successful to update user',
+    description: 'Usuário atualizado com sucesso.',
     type: UserDocs,
   })
   async update(
@@ -99,8 +99,8 @@ export class UsersController {
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRoleEnum.ADMIN)
   @Delete(':id')
-  @ApiOperation({ summary: 'Admin delete a user by ID' })
-  @ApiParam({ name: 'id', type: 'integer', description: 'ID of the user' })
+  @ApiOperation({ summary: 'Admin deleta um usuário pelo ID' })
+  @ApiParam({ name: 'id', type: 'integer', description: 'ID do usuário' })
   @ApiBearerAuth()
   async delete(@Param('id', ParseIntPipe) id: number) {
     return await this.usersService.delete(id);
