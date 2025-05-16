@@ -36,7 +36,7 @@ describe('UsersController', () => {
             getAll: jest.fn().mockResolvedValue(mockPagination),
             delete: jest
               .fn()
-              .mockResolvedValue({ response: 'User deleted with success.' }),
+              .mockResolvedValue({ response: 'Usuário deletado com sucesso.' }),
             update: jest.fn().mockResolvedValue(userMock),
           },
         },
@@ -145,7 +145,7 @@ describe('UsersController', () => {
     it('should soft delete user', async () => {
       const result = await controller.delete(1);
 
-      expect(result).toEqual({ response: 'User deleted with success.' });
+      expect(result).toEqual({ response: 'Usuário deletado com sucesso.' });
       expect(service.delete).toHaveBeenCalledWith(1);
     });
   });

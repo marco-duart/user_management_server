@@ -8,6 +8,7 @@ import { CurrentUserDto } from '../decorators/dto/current-user.dto';
 import { UserRoleEnum } from '../enums/user-role.enum';
 import { userMock } from '../testing/users.test/user.mock';
 import { tokenMock } from '../testing/auth.test/token.mock';
+import { ConfigModule } from '@nestjs/config';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -28,6 +29,7 @@ describe('AuthController', () => {
           useValue: mockAuthService,
         },
       ],
+      imports: [ConfigModule],
     })
       .overrideGuard(AuthGuard)
       .useValue({ canActivate: () => true })

@@ -64,7 +64,7 @@ describe('UsersService', () => {
   describe('delete', () => {
     it('should soft delete user', async () => {
       const result = await service.delete(1);
-      expect(result).toEqual({ response: 'User deleted with success.' });
+      expect(result).toEqual({ response: 'Usuário deletado com sucesso.' });
     });
   });
 
