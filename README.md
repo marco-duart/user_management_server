@@ -13,7 +13,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 1. Clone o repositório:
 ```
    git clone https://github.com/marco-duart/user_management_server.git
-   cd user_management_server
+   cd user_management_server```
 
 2. Instale as dependências:
    npm install
