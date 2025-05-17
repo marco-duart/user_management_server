@@ -13,14 +13,19 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 1. Clone o repositório:
 ```
    git clone https://github.com/marco-duart/user_management_server.git
-   cd user_management_server```
+   cd user_management_server
+```
 
 2. Instale as dependências:
+```
    npm install
+```
    ou
+```
    yarn install
+```
 
-3. Configure as variáveis de ambiente:
+4. Configure as variáveis de ambiente:
    - Crie um arquivo `.env` na raiz do projeto baseado no `.env.example` fornecido.
    - Crie um arquivo `.env.test.local` na raiz do projeto baseado no `.env.test.local.example` fornecido.
    - Preencha todos os valores necessários, especialmente:
@@ -28,14 +33,16 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
      - Segredo JWT
      - Credenciais do Google OAuth
 
-4. Banco de dados:
+5. Banco de dados:
    - Certifique-se que o PostgreSQL está rodando
    - A API criará automaticamente o banco de dados se ele não existir
 
 ## Executando a Aplicação
 
 Executar o comando:
+```
 npm start
+```
 
 A API estará disponível em `http://localhost:3001` (ou na porta configurada no .env)
 
@@ -47,10 +54,14 @@ http://localhost:3001/api/v1/docs
 ## Testes
 
 Testes unitários:
+```
 npm run test
+```
 
 Testes de integração:
+```
 npm run test:e2e
+```
 
 ## Variáveis de Ambiente
 
