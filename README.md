@@ -162,5 +162,14 @@ src/
 - Testes unitários
 - Testes de integração
 
+## **Deploy**  
+`Aplicação`  
+http://34.31.28.30:5173  
+
+### Problema no OAuth
+- **Erro 400** do Google: bloqueia IPs brutos (`34.31.28.30`)  
+- Exige **domínio válido** (ex: `.com`, `.br`)  
+- Para o deploy, não é possível realizar a dinâmica de OAuth2.0 
+
 ## Licença
 Este projeto está licenciado sob a Apache License Version 2.0 - veja o arquivo LICENSE para detalhes.
